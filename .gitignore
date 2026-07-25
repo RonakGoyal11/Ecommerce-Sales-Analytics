@@ -1,0 +1,40 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Power BI temp files
+*.pbix.bak
+~$*.pbix
+
+# Logs
+*.log
+
+# Environment variables / secrets
+.env
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Static analysis cache
+.mypy_cache/

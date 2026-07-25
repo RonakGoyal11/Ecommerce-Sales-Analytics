@@ -1,0 +1,34 @@
+name: Run Analytics Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run end-to-end pipeline
+        run: python -m src.main
+
+      - name: Verify processed outputs exist
+        run: |
+          test -f data/processed/superstore_cleaned.csv
+          test -f data/processed/customer_summary.csv
+          test -f data/processed/product_summary.csv
+          test -f reports/business_insights.md
+          test -f images/top_selling_products.png
+          echo "All expected pipeline outputs were generated successfully."
