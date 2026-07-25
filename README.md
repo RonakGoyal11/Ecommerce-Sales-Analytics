@@ -220,7 +220,7 @@ See `presentation/dashboard_mockup.png` for the visual target.
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/Ecommerce-Sales-Analytics.git
+git clone https://github.com/RonakGoyal11/Ecommerce-Sales-Analytics.git
 cd Ecommerce-Sales-Analytics
 python -m venv venv
 source venv/bin/activate        # Windows: venv\Scripts\activate
@@ -265,4 +265,6 @@ Full Power BI dashboard mockup: [`presentation/dashboard_mockup.png`](presentati
 
 ## Author
 
-Built as a portfolio-grade Business/Data Analyst project. See `presentation/` for the project deck and `reports/interview_preparation.md` for interview talking points.
+Built as a portfolio-grade Business/Data Analyst project.
+
+For the complete presentation, see the `presentation/` folder.
