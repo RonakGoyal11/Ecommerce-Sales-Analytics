@@ -1,0 +1,10 @@
+Metric,Value,Definition
+Sales rows,110197.0,Delivered order items
+Distinct delivered orders,96478.0,Distinct order IDs
+Distinct customers,93358.0,Distinct customer unique IDs
+Product revenue,13221498.11,Sum of product prices
+Freight charges,2198275.64,Sum of freight values on delivered order items
+Sales including freight,15419773.75,Product prices plus freight
+Repeat-customer rate (%),3.0,Customers with at least two delivered orders
+Average delivery time (days),12.5,Purchase to customer delivery date
+Late-delivery rate (%),8.11,Delivered after estimated date
