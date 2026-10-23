@@ -1,232 +1,171 @@
 # Olist E-Commerce Sales & Customer Analytics
 
-An end-to-end business intelligence project analyzing e-commerce sales performance, customer purchasing behavior, repeat purchases, product categories, and delivery performance using **MySQL, Python, and Power BI**.
+**An end-to-end analytics project on 96K+ delivered orders: SQL data layer, Python RFM segmentation, unit-tested code, and an interactive Power BI dashboard.**
 
-[Dataset](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) · SQL Analytics · Customer Segmentation · Business Intelligence
+<p align="center">
+  <img src="PowerBI/dashboard_preview.gif" alt="Olist E-Commerce Sales and Customer Analytics Power BI Dashboard" width="100%">
+</p>
 
-## Project Overview
+<p align="center">
+  <strong>96,478 Delivered Orders</strong> &nbsp;•&nbsp;
+  <strong>93,358 Customers</strong> &nbsp;•&nbsp;
+  <strong>R$15.42M Sales Incl. Freight</strong>
+</p>
 
-E-commerce businesses need reliable metrics to understand sales performance, identify customer segments, and evaluate operational efficiency.
+**Dataset:** [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (Sep 2016 – Aug 2018)
+**Tech Stack:** MySQL 8 · SQL · Python · pandas · NumPy · Jupyter · pytest · Power BI
 
-This project transforms the public Brazilian E-Commerce dataset by Olist into an analytical workflow combining relational data modeling, SQL-based business analysis, Python-powered Recency–Frequency–Monetary (RFM) segmentation, automated testing, and Power BI reporting.
+**Quick links:** [Dashboard (.pbix)](PowerBI/olist%20ecommerce.pbix) · [Dashboard (PDF)](PowerBI/olist%20ecommerce.pdf) · [SQL queries](sql/queries.sql) · [RFM code](python/rfm.py) · [Tests](tests/test_rfm.py)
 
-The objective is to demonstrate how transactional data can be structured into meaningful metrics that support business analysis and evidence-based decision-making.
+---
+
+## TL;DR
+
+- **Olist is overwhelmingly a one-time-buyer marketplace.** Only **3.00%** of customers placed a second delivered order, and just **1.55%** qualify as Champions or Loyal Customers.
+- **Delivery is slow but mostly reliable.** Average delivery time is **12.5 days**, with an **8.11%** late-delivery rate.
+- **Average order value is about R$160** (R$159.83 including freight). Freight adds R$2.20M on top of R$13.22M in product revenue.
+- **What I built:** a SQL analytical view, a Python data-quality and RFM pipeline, 20 unit tests, and a Power BI dashboard.
+
+---
 
 ## Business Questions
 
-The analysis investigates the following questions:
+1. **Sales performance:** How do revenue, orders, categories, and states perform?
+2. **Retention:** What share of customers come back?
+3. **Segmentation:** Which customers are recent, valuable, or at risk (RFM)?
+4. **Delivery:** How long do orders take, and how often are they late?
 
-- How do sales and order volumes change over time?
-- Which product categories contribute the most product revenue?
-- How does sales performance vary across customer states?
-- What proportion of customers place repeat orders?
-- Which customer groups exhibit different purchasing patterns?
-- How long do delivered orders take to arrive, and how often are deliveries late?
-- How does revenue vary across customer segments?
+---
 
-## Technology Stack
+## Key Findings
 
-| Technology | Application |
+| Area | Result |
 |---|---|
-| MySQL 8 | Relational data storage, joins, views, and indexes |
-| SQL | KPI calculations, aggregations, time-series analysis, and business queries |
-| Python | Data preparation, data-quality validation, and RFM segmentation |
-| pandas and NumPy | Data manipulation and numerical analysis |
-| Jupyter Notebook | Exploratory analysis and end-to-end workflow |
-| Power BI | Interactive KPI reporting and visual analysis |
-| pytest | Automated testing of analytical functions |
-
-## Project Architecture
-
-The project follows a structured analytics workflow:
-
-1. **Data ingestion:** Load the Olist CSV datasets into MySQL.
-2. **Data modeling:** Join orders, customers, order items, products, and category translations into a reusable sales view.
-3. **Data-quality validation:** Check missing keys, invalid dates, negative values, and duplicate order-item identifiers.
-4. **Business analysis:** Use SQL to investigate revenue, order volumes, category performance, repeat purchasing, geographic patterns, and delivery performance.
-5. **Customer segmentation:** Calculate customer-level RFM metrics and assign rule-based segments in Python.
-6. **Business intelligence:** Explore sales and customer metrics through Power BI.
-7. **Testing:** Validate core Python functionality using automated tests.
-
-## Key Analytical Components
-
-### 1. SQL Business Analytics
-
-The `vw_master_sales` view establishes an order-item-level analytical dataset, with one row per order item and a filter for delivered orders.
-
-The SQL queries cover:
-
-- Headline sales and order KPIs
-- Monthly sales trends
-- Product-category revenue comparisons
-- Sales and average order value by customer state
-- Repeat-customer rate
-- Delivery time and late-delivery rate
-- Customer-segment performance
-
-**Metric integrity:** Order-item rows are not equivalent to unique orders. Order counts use distinct `order_id` values to prevent multi-item orders from being counted more than once.
-
-Implementation:
-- `sql/db_create.sql`
-- `sql/fact_table.sql`
-- `sql/indexes.sql`
-- `sql/queries.sql`
-
-### 2. Python RFM Customer Segmentation
-
-The project implements customer-level RFM analysis using three metrics:
-
-- **Recency:** Days since a customer's most recent purchase, measured relative to the analysis reference date.
-- **Frequency:** Number of distinct delivered orders placed by the customer.
-- **Monetary:** Sum of product prices and associated freight across analyzed order items.
-
-The resulting metrics feed a rule-based segmentation framework with six customer groups:
-
-| Segment | Analytical purpose |
-|---|---|
-| Champions | Identify customers with strong recent purchasing behavior and high RFM scores |
-| Loyal Customers | Identify customers meeting the project's loyalty classification rules |
-| Potential Loyalists | Highlight customers who may warrant retention or engagement analysis |
-| New Customers | Identify relatively recent customers |
-| At Risk | Flag customers whose purchasing behavior meets the project's risk rules |
-| Lost / One-Time | Identify customers classified as inactive or having limited purchase frequency |
-
-These categories are analytical classifications based on the project's scoring rules. They are not independently validated predictions of future customer behavior.
-
-Implementation: `python/rfm.py`
-
-### 3. Power BI Dashboard
-
-The Power BI report provides a visual interface for exploring:
-
-- Revenue and order KPIs
-- Revenue by product category
-- Revenue distribution across customer segments
-- Revenue trends over time
-- Customer-state filtering
-
-Files are available in the `PowerBI/` directory, with dashboard preview assets in `gif/`.
-
-Dashboard values and visuals should be refreshed and reconciled against the SQL definitions before being used in external presentations.
-
-## Key Business Findings
-
-The following figures are recorded in the project's analytical outputs for delivered orders. They should be interpreted within the dataset and metric definitions described below.
-
-| Metric | Recorded result |
-|---|---:|
-| Order-item rows analyzed | 110,197 |
-| Distinct delivered orders | 96,478 |
-| Distinct customers | 93,358 |
-| Product revenue | 13,221,498.11 |
-| Freight charges | 2,198,275.64 |
-| Sales including freight | 15,419,773.75 |
-| Repeat-customer rate | 3.00% |
+| Delivered orders / customers | 96,478 / 93,358 |
+| Product revenue | R$13.22M |
+| Freight | R$2.20M |
+| Sales incl. freight | R$15.42M |
+| Average order value (incl. freight) | R$159.83 |
+| Repeat-customer rate | 3.00% (2,801 customers) |
 | Average delivery time | 12.50 days |
-| Late-delivery rate | 8.11% |
+| Late-delivery rate | 8.11% (96,470 eligible orders) |
 
-**Interpretation**
+**Retention is the core story.** Fewer than 1 in 30 customers reorder, so growth depends heavily on acquiring new buyers. That makes repeat-purchase behaviour the most valuable area to study next.
 
-- **Customer retention:** The recorded repeat-customer rate indicates an opportunity to investigate repeat purchasing and retention behavior further.
-- **Delivery performance:** The recorded late-delivery rate provides a starting point for investigating delivery reliability and potential operational improvements.
-- **Revenue reporting:** Product revenue and freight-inclusive sales differ materially, so reports should clearly state which measure is being presented.
-- **Customer segmentation:** RFM groups provide a framework for comparing purchasing patterns and developing hypotheses for further analysis.
+**Customer segments (RFM):**
 
-These findings are descriptive, not evidence of causation. Retention and delivery recommendations would require additional investigation.
+| Segment | Customers | Share |
+|---|---:|---:|
+| Lost / One-Time | 45,420 | 48.65% |
+| New Customers | 22,760 | 24.38% |
+| Potential Loyalists | 22,470 | 24.07% |
+| At Risk | 1,258 | 1.35% |
+| Loyal Customers | 864 | 0.93% |
+| Champions | 586 | 0.63% |
 
-**Before using these figures in a resume or interview:** Re-run the relevant SQL queries against the final database, confirm the repeat-customer and delivery-rate denominators, and reconcile the Power BI measures with the SQL definitions. The figures above are transcribed from the supplied project README; they are not independently revalidated by this document rewrite. Confirm the currency and formatting before presenting monetary values externally.
+> **Note:** Segments are rule-based and meant for exploration, not churn prediction. Because the dataset spans only two years, many "Lost / One-Time" customers are simply single buyers whose window to return was short.
 
-## Metric Definitions
+---
 
-| Metric | Definition |
-|---|---|
-| Product revenue | Sum of item product prices |
-| Freight charges | Sum of item freight charges |
-| Sales including freight | Product revenue plus freight charges |
-| Order count | Number of distinct delivered orders |
-| Average order value including freight | Sales including freight divided by distinct delivered orders |
-| Product-only average order value | Product revenue divided by distinct delivered orders |
-| Repeat-customer rate | Customers with at least two distinct delivered orders divided by the analyzed customer population |
-| Average delivery time | Average time between purchase and delivery for eligible records |
-| Late-delivery rate | Eligible delivered orders arriving after their estimated delivery dates divided by the eligible delivery population |
+## Recommended Next Steps
 
-Delivery metrics exclude records missing the required timestamps. The exact eligible populations used in the SQL calculations should be checked when reconciling reported results.
+Each next step comes with a success metric so the impact can be measured rather than assumed.
 
-## Repository Structure
+| Focus | Proposed analysis | Success metric |
+|---|---|---|
+| **Retention** | Build monthly customer cohorts; test targeted follow-ups for first-time buyers | % of first-time customers who reorder within 90 days |
+| **Delivery reliability** | Compare late rates and delivery times by customer state and seller | Late-delivery rate and avg. delivery time by region |
+| **Customer experience** | Compare review scores for on-time vs. late orders | Avg. review score and % low-rated reviews by delivery status |
+| **Freight economics** | Compare freight to product revenue by category and state | Freight-to-product-revenue ratio |
 
-```text
-Ecommerce-Sales-Analytics/
-├── data/
-│   └── raw/                  # Local source datasets; not committed
-├── gif/                      # Dashboard preview assets
-├── PowerBI/
-│   ├── olist ecommerce.pbix
-│   └── olist ecommerce.pdf
-├── python/
-│   ├── config.py             # Database and dataset configuration
-│   ├── notebook.ipynb        # Analysis workflow
-│   └── rfm.py                # RFM logic and segmentation
-├── sql/
-│   ├── db_create.sql
-│   ├── fact_table.sql
-│   ├── indexes.sql
-│   └── queries.sql
-├── tests/
-│   └── test_rfm.py
-├── .env.example
-├── .gitignore
-├── LICENSE
-├── README.md
-└── requirements.txt
-```
+---
 
-The repository may evolve as the project is finalized.
+## Power BI Dashboard
 
-## Getting Started
+Interactive report covering:
+
+- Executive KPI cards (revenue, order volume)
+- AOV trend vs. target
+- Revenue by product category
+- Revenue by RFM segment
+- Revenue over time
+- State-level revenue map with filtering
+
+Files: [`.pbix` report](PowerBI/olist%20ecommerce.pbix) · [PDF export](PowerBI/olist%20ecommerce.pdf)
+
+---
+
+## Skills Demonstrated
+
+- **SQL:** multi-table joins, analytical view design, grain control (`COUNT(DISTINCT order_id)`), KPI and trend queries, indexing
+- **Python:** pandas / NumPy processing, data-quality checks, RFM scoring and segmentation
+- **Testing:** 20 pytest unit tests on synthetic data (frequency, recency, monetary, quartile ties, segment rules, data-quality flags)
+- **BI & communication:** Power BI dashboard, metric definitions, business-oriented recommendations
+
+---
+
+## Technical Implementation
+
+### SQL (MySQL)
+
+- Built `vw_master_sales`, an order-item-grain view of delivered orders joining orders, customers, order items, products, and category translations.
+- Used `COUNT(DISTINCT order_id)` for order-level metrics so multi-item orders are not double-counted.
+- Wrote 8 analytical queries: headline KPIs, grain checks, monthly trends, categories, state sales, repeat purchasing, delivery performance, and customer segments.
+
+Files: `sql/db_create.sql`, `sql/fact_table.sql`, `sql/queries.sql`, `sql/indexes.sql`
+
+### Python
+
+- Loaded the Olist CSVs into MySQL via a Jupyter workflow.
+- Checked for missing keys, unparseable dates, negative values, duplicate `(order_id, order_item_id)` keys, and missing prices or freight.
+- Calculated customer-level RFM metrics and assigned segments.
+
+Files: `python/notebook.ipynb`, `python/rfm.py`, `python/config.py`
+
+### RFM Definitions
+
+- **Recency:** days since last purchase, measured from one day after the latest purchase in the data
+- **Frequency:** number of distinct delivered orders
+- **Monetary:** total product price plus freight
+
+Recency and monetary use quartile scoring (ties share a score); frequency is scored on distinct delivered orders. Segment rules are in `python/rfm.py`.
+
+---
+
+<details>
+<summary><strong>Setup and Execution</strong></summary>
 
 ### Prerequisites
 
-- Python 3.10 or later
+- Python 3.10+
 - MySQL 8
 - Git
-- Power BI Desktop (optional, for exploring the report)
+- Power BI Desktop (optional)
 
-### 1. Clone the repository
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/RonakGoyal11/Ecommerce-Sales-Analytics.git
 cd Ecommerce-Sales-Analytics
-```
-
-### 2. Create a Python environment
-
-```bash
 python -m venv .venv
 ```
 
-On Windows CMD:
+Activate the environment:
 
-```cmd
-.venv\Scripts\activate
-```
-
-Install the dependencies:
+- **Windows:** `.venv\Scripts\activate`
+- **macOS/Linux:** `source .venv/bin/activate`
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-### 3. Obtain the dataset
+### 2. Download the dataset
 
-Download the [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and extract the required CSV files into `data/raw/`.
+Download the [Olist dataset from Kaggle](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) and extract the nine CSV files listed in `EXPECTED_CSV_FILES` (`python/config.py`) into `data/raw/`, or set `OLIST_DATA_DIR` to another folder.
 
-The dataset is not included in this repository. Keep the raw files out of Git commits and follow the dataset's applicable terms.
+### 3. Configure MySQL
 
-### 4. Configure environment variables
-
-Copy `.env.example` to `.env` and configure your local MySQL connection.
-
-Example:
+Copy `.env.example` to `.env` and update it:
 
 ```dotenv
 DB_HOST=localhost
@@ -237,67 +176,82 @@ DB_NAME=olist_ecommerce
 OLIST_DATA_DIR=data/raw
 ```
 
-Use your own database credentials. Never commit `.env` or expose passwords in notebooks, screenshots, or logs.
+Never commit `.env`.
 
-### 5. Prepare the database
+### 4. Create the database and run the notebook
 
-Create the project database using `sql/db_create.sql`. Load the source tables through the notebook's data-ingestion workflow, then create the sales view and run the analysis.
+```bash
+mysql -u root -p < sql/db_create.sql
+jupyter notebook python/notebook.ipynb
+```
 
-**Important:** The notebook's CSV-loading cell uses table replacement. Re-running it replaces the existing source tables in the configured database. Confirm the database target and back up any important data before running it.
+Run the cells in order to load data, create the view, run quality checks, and calculate RFM segments.
 
-Follow the notebook's documented execution order rather than executing cells arbitrarily.
+> **Warning:** The loading cell uses `if_exists="replace"`, which overwrites existing source tables. Confirm `DB_NAME` before running.
 
-### 6. Run the automated tests
+### 5. Run SQL and tests
 
-From the repository root:
+Run `sql/queries.sql` in your MySQL client (the segment summary needs the `customer_segments` table created by the notebook). Optionally apply `sql/indexes.sql` once.
 
 ```bash
 python -m pytest tests -q
 ```
 
-The project test suite has previously passed **20 tests** in the local development environment. Re-run the command after making changes to confirm the current result.
+### 6. Open the dashboard
 
-### 7. Open the Power BI report
+Open `PowerBI/olist ecommerce.pbix` in Power BI Desktop, point the data source to your local MySQL database, and refresh.
 
-Open the `.pbix` file from `PowerBI/` in Power BI Desktop. Configure the required data connection, refresh the report where appropriate, and validate measures and visuals before relying on the displayed values.
+</details>
 
-## Testing and Validation
+<details>
+<summary><strong>Repository Structure</strong></summary>
 
-The automated tests cover core RFM calculations and selected data-quality behavior.
+```text
+Ecommerce-Sales-Analytics/
+├── data/raw/                      # Local Olist CSVs (git-ignored)
+├── PowerBI/
+│   ├── dashboard_preview.gif
+│   ├── olist ecommerce.pbix
+│   └── olist ecommerce.pdf
+├── python/
+│   ├── config.py
+│   ├── notebook.ipynb
+│   └── rfm.py
+├── reports/validated_business_metrics.csv
+├── sql/
+│   ├── db_create.sql
+│   ├── fact_table.sql
+│   ├── indexes.sql
+│   └── queries.sql
+├── tests/test_rfm.py
+├── .env.example
+├── LICENSE
+├── README.md
+└── requirements.txt
+```
 
-Testing is one part of the validation process. Passing unit tests does not independently verify:
+</details>
 
-- Every SQL query against the complete dataset
-- All Power BI measures and relationships
-- Consistency between dashboard values and SQL outputs
-- Reproducibility of the complete notebook from a clean environment
+<details>
+<summary><strong>Scope and Methodology</strong></summary>
 
-## Limitations and Interpretation
+- **Period:** September 2016 – August 2018
+- **Order scope:** headline sales metrics cover delivered orders only
+- **Grain:** each row in the sales view is an order item; order-level counts use distinct order IDs
+- **Delivery metrics:** only orders with purchase, delivery, and estimated-delivery timestamps
+- **AOV:** sales including freight divided by distinct delivered orders
+- **RFM:** rule-based segments for exploratory analysis
 
-- The project analyzes historical transactions rather than live e-commerce activity.
-- The primary sales view includes delivered orders only; results may differ when other order statuses are included.
-- Category-level order counts can overlap because a single order may contain products from multiple categories.
-- RFM segments depend on the selected scoring thresholds and business rules.
-- Delivery metrics depend on the availability and validity of timestamp fields.
-- Results are descriptive and should not be interpreted as proof that one factor caused another.
-- Dashboard exports can become stale when the underlying data or analytical logic changes.
+</details>
 
-## Dataset Attribution
+---
 
-**Dataset:** Brazilian E-Commerce Public Dataset by Olist
-**Publisher:** Olist
-**Source:** [Kaggle dataset page](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce)
+## Attribution and Licensing
+
+**Dataset:** [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) on Kaggle. Not redistributed here; see the publisher's terms before reuse.
+
+**Code:** MIT License (see [`LICENSE`](LICENSE)). This does not cover the Olist dataset or third-party content, including map data credited in the dashboard.
 
 This is an independent portfolio project and is not affiliated with or endorsed by Olist.
 
-## License
-
-The project code is distributed under the MIT License. See `LICENSE` for details.
-
-The project license does not automatically grant rights to the Olist dataset or third-party assets. Their respective terms remain applicable.
-
-## Author
-
-**Ronak Goyal**
-
-**Project focus:** SQL Analytics · Python · Customer Segmentation · Business Intelligence · Power BI
+**Author:** [Ronak Goyal](https://github.com/RonakGoyal11)
